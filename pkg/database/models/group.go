@@ -1,23 +1,24 @@
 package models
 
 import (
-	"time"
+	"database/sql"
 )
 
 type Group struct {
-	UID          uint      `gorm:"primaryKey;autoIncrement"`
-	AddedDate    time.Time `gorm:"column:added_date"`
-	ID           uint      `gorm:"unique;not null"`
-	Years        string    `gorm:"size:255"`
-	LocalName    string    `gorm:"size:255"`
-	Name         string    `gorm:"size:255"`
-	Specialty    string    `gorm:"size:255"`
-	Level        string    `gorm:"size:255"`
-	Course       int
-	Abbreviation string `gorm:"size:255"`
-	Faculty      string `gorm:"size:255"`
-}
+	ID uint `gorm:"primaryKey"`
 
-func (Group) TableName() string {
-	return "groups"
+	BranchID uint   `gorm:"not null;index"`
+	Branch   Branch `gorm:"foreignKey:BranchID;references:ID;constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT;"`
+
+	LocalName sql.NullString
+	Name      string `gorm:"not null"`
+	Course    uint8  `gorm:"not null"`
+
+	SpecialityID uint       `gorm:"not null;index"`
+	Speciality   Speciality `gorm:"foreignKey:SpecialityID;references:ID;constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT;"`
+
+	FacultyID uint    `gorm:"not null;index"`
+	Faculty   Faculty `gorm:"foreignKey:FacultyID;references:ID;constraint:OnUpdate:RESTRICT,OnDelete:RESTRICT;"`
+
+	Couples []Couple `gorm:"foreignKey:GroupID;references:ID"`
 }

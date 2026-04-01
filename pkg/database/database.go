@@ -16,7 +16,6 @@ var (
 	mu     sync.Mutex
 )
 
-// InitDatabase инициализирует соединение с БД (потокобезопасно)
 func InitDatabase(DSN string) error {
 	mu.Lock()
 	defer mu.Unlock()
